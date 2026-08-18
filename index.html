@@ -1,0 +1,505 @@
+# Abandoned City — Game Pass Creator
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abandoned City — Pass Creator</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Inter, sans-serif;
+    background: #050505;
+    color: #fff;
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 35%),
+        radial-gradient(circle at 0% 100%, rgba(255,255,255,.035), transparent 30%);
+}
+
+.container {
+    width: min(900px, calc(100% - 30px));
+    margin: auto;
+}
+
+nav {
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #1b1b1b;
+}
+
+.logo {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -.4px;
+}
+
+.logo span {
+    color: #666;
+}
+
+.roblox {
+    color: #999;
+    font-size: 12px;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 0 45px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border: 1px solid #242424;
+    border-radius: 999px;
+    background: #0c0c0c;
+    color: #999;
+    font-size: 11px;
+    margin-bottom: 22px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+h1 {
+    font-size: clamp(38px, 7vw, 65px);
+    line-height: 1;
+    letter-spacing: -3px;
+}
+
+.hero p {
+    max-width: 570px;
+    margin: 20px auto 0;
+    color: #777;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+.panel {
+    background: #0a0a0a;
+    border: 1px solid #202020;
+    border-radius: 17px;
+    padding: 25px;
+    box-shadow: 0 25px 80px rgba(0,0,0,.3);
+}
+
+.field {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+input,
+textarea {
+    width: 100%;
+    border: 1px solid #252525;
+    outline: none;
+    background: #050505;
+    color: #fff;
+    border-radius: 10px;
+    padding: 13px 14px;
+    font: inherit;
+    font-size: 13px;
+    transition: .2s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #555;
+    background: #080808;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+button {
+    width: 100%;
+    border: 0;
+    cursor: pointer;
+    padding: 14px;
+    border-radius: 10px;
+    background: #fff;
+    color: #000;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+button:hover {
+    background: #ddd;
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.status {
+    display: none;
+    margin-top: 18px;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.status.show {
+    display: block;
+}
+
+.status.success {
+    background: #0d160d;
+    border: 1px solid #203820;
+    color: #b9d9b9;
+}
+
+.status.error {
+    background: #170b0b;
+    border: 1px solid #3b1d1d;
+    color: #e0aaaa;
+}
+
+.results {
+    margin-top: 22px;
+}
+
+.result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 9px;
+    border: 1px solid #202020;
+    border-radius: 11px;
+    background: #080808;
+}
+
+.result-info strong {
+    display: block;
+    font-size: 13px;
+}
+
+.result-info span {
+    display: block;
+    margin-top: 4px;
+    color: #666;
+    font-size: 11px;
+}
+
+.result a {
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #292929;
+    padding: 8px 11px;
+    border-radius: 8px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.result a:hover {
+    background: #fff;
+    color: #000;
+}
+
+footer {
+    text-align: center;
+    padding: 35px 0;
+    color: #444;
+    font-size: 11px;
+}
+
+@media(max-width:600px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+
+    h1 {
+        letter-spacing: -2px;
+    }
+
+    .result {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<nav>
+    <div class="logo">
+        ABANDONED <span>CITY</span>
+    </div>
+
+    <div class="roblox">
+        ROBLOX CREATOR
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="badge">
+        <span class="dot"></span>
+        GAME PASS CREATOR
+    </div>
+
+    <h1>Create Game Passes.</h1>
+
+    <p>
+        Create Roblox Game Passes for your experience directly from this
+        dashboard. Your Roblox API key stays securely on the Cloudflare Worker.
+    </p>
+</section>
+
+<section class="panel">
+
+    <div class="row">
+
+        <div class="field">
+            <label>UNIVERSE ID</label>
+            <input
+                id="universeId"
+                placeholder="Example: 123456789"
+                inputmode="numeric"
+            >
+        </div>
+
+        <div class="field">
+            <label>GAME PASS NAME</label>
+            <input
+                id="name"
+                value="Abandoned City Donation"
+                placeholder="Donation 50"
+            >
+        </div>
+
+    </div>
+
+    <div class="field">
+        <label>DESCRIPTION</label>
+        <textarea id="description">Support the development of A Just a Abandoned City.</textarea>
+    </div>
+
+    <div class="row">
+
+        <div class="field">
+            <label>PRICE — ROBUX</label>
+            <input
+                id="price"
+                type="number"
+                min="1"
+                placeholder="50"
+            >
+        </div>
+
+        <div class="field">
+            <label>AMOUNT LABEL</label>
+            <input
+                id="label"
+                placeholder="50"
+                value="50"
+            >
+        </div>
+
+    </div>
+
+    <button id="create">
+        CREATE GAME PASS
+    </button>
+
+    <div id="status" class="status"></div>
+
+    <div id="results" class="results"></div>
+
+</section>
+
+<footer>
+    Abandoned City · Roblox Creator Tools
+</footer>
+
+</div>
+
+<script>
+const API = "/api/create-pass";
+
+const createButton = document.getElementById("create");
+const statusBox = document.getElementById("status");
+const results = document.getElementById("results");
+
+function showStatus(message, type) {
+    statusBox.className = "status show " + type;
+    statusBox.textContent = message;
+}
+
+createButton.addEventListener("click", async () => {
+
+    const universeId =
+        document.getElementById("universeId").value.trim();
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const description =
+        document.getElementById("description").value.trim();
+
+    const price =
+        Number(document.getElementById("price").value);
+
+    if (!/^\d+$/.test(universeId)) {
+        showStatus("Enter a valid numeric Universe ID.", "error");
+        return;
+    }
+
+    if (!name) {
+        showStatus("Enter a Game Pass name.", "error");
+        return;
+    }
+
+    if (!price || price < 1) {
+        showStatus("Enter a valid Robux price.", "error");
+        return;
+    }
+
+    createButton.disabled = true;
+    createButton.textContent = "CREATING...";
+
+    showStatus("Creating Game Pass through Roblox Open Cloud...", "success");
+
+    try {
+
+        const response = await fetch(API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                universeId,
+                name,
+                description,
+                price
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Roblox returned an error."
+            );
+        }
+
+        const gamePassId =
+            data.gamePassId ||
+            data.id ||
+            data.gamePass?.id;
+
+        if (!gamePassId) {
+            throw new Error(
+                "Roblox created a response, but no Game Pass ID was returned."
+            );
+        }
+
+        showStatus(
+            "Game Pass created successfully. ID: " + gamePassId,
+            "success"
+        );
+
+        const item = document.createElement("div");
+        item.className = "result";
+
+        item.innerHTML = `
+            <div class="result-info">
+                <strong>${escapeHtml(name)}</strong>
+                <span>${price.toLocaleString()} Robux · ID ${escapeHtml(String(gamePassId))}</span>
+            </div>
+
+            <a
+                href="https://www.roblox.com/game-pass/${encodeURIComponent(gamePassId)}"
+                target="_blank"
+                rel="noopener"
+            >
+                OPEN PASS ↗
+            </a>
+        `;
+
+        results.prepend(item);
+
+    } catch (error) {
+
+        showStatus(
+            error.message || "Something went wrong.",
+            "error"
+        );
+
+    } finally {
+
+        createButton.disabled = false;
+        createButton.textContent = "CREATE GAME PASS";
+    }
+});
+
+function escapeHtml(value) {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+</script>
+
+</body>
+</html>
+```
